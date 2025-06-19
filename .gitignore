@@ -1,13 +1,31 @@
 *.iml
 .gradle
 /local.properties
-/.idea
-/.idea/caches/build_file_checksums.ser
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
+.idea/
 .DS_Store
 /build
 /captures
 gradle
 .externalNativeBuild
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+.cxx
+local.properties
+
+# Log/OS Files
+*.log
+
+# Android Studio generated files and folders
+*.apk
+output-metadata.json
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
