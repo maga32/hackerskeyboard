@@ -1933,7 +1933,6 @@ public class LatinIME extends InputMethodService implements
     }
 
     // Implementation of KeyboardViewListener
-
     public void onKey(int primaryCode, int[] keyCodes, int x, int y) {
         long when = SystemClock.uptimeMillis();
         if (primaryCode != Keyboard.KEYCODE_DELETE
@@ -2124,6 +2123,21 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void handleBackspace() {
+        // Korean IME Start
+        if ("ko".equals(this.mInputLocale)) {
+            InputConnection ic = getCurrentInputConnection();
+            String prev = ic.getTextBeforeCursor(1,0)+"";
+            KoreanKeysFlat.load(this);
+            String result = KoreanKeysFlat.deleteChar(prev);
+
+            ic.deleteSurroundingText(1, 0);
+            if (result != null && !prev.isEmpty()) {
+                ic.commitText(result, 1);
+            }
+
+            return;
+        }
+
         boolean deleteChar = false;
         InputConnection ic = getCurrentInputConnection();
         if (ic == null)
@@ -2287,6 +2301,23 @@ public class LatinIME extends InputMethodService implements
     }
 
     private void handleCharacter(int primaryCode, int[] keyCodes) {
+        // Korean IME Start
+        if ("ko".equals(this.mInputLocale) && primaryCode >= 12593 && primaryCode <= 12643) {
+            InputConnection ic = getCurrentInputConnection();
+            String prev = ic.getTextBeforeCursor(1,0)+"";
+            String added = (char)primaryCode+"";
+            KoreanKeysFlat.load(this);
+            String result = KoreanKeysFlat.getNextChar(prev, added);
+
+            if (result != null && !prev.isEmpty()) {
+                ic.deleteSurroundingText(1, 0);
+                ic.commitText(result, 1);
+            } else {
+                ic.commitText(added, 1);
+            }
+            return;
+        }
+
         if (mLastSelectionStart == mLastSelectionEnd
                 && TextEntryState.isCorrecting()) {
             abortCorrection(false);
